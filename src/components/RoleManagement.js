@@ -35,34 +35,36 @@ const RoleManagement = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">Role Management</h2>
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <h2 className="text-3xl font-bold text-white mb-6">Role Management</h2>
+      <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+        <table className="min-w-full divide-y divide-gray-700">
+          <thead className="bg-gray-900">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                 Role Name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                 Permissions
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-gray-800 divide-y divide-gray-700">
             {roles.map((role) => (
               <tr
                 key={role.id}
-                className="hover:bg-gray-50 transition-colors duration-200"
+                className="hover:bg-gray-700 hover:border hover:border-gray-500 transition-all duration-300"
               >
-                <td className="px-6 py-4 whitespace-nowrap">{role.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-white">
+                  {role.name}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {role.permissions.map((perm, index) => (
                     <span
                       key={index}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-2"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-800 text-blue-300 mr-2"
                     >
                       {perm}
                     </span>
@@ -70,7 +72,7 @@ const RoleManagement = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button
-                    className="text-indigo-600 hover:text-indigo-900 transition-colors duration-200"
+                    className="text-blue-400 hover:text-blue-500 transition-colors duration-200"
                     onClick={() => handleEdit(role)}
                   >
                     Edit

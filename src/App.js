@@ -10,7 +10,7 @@ import NotFound from "./pages/NotFound";
 const App = () => {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-gray-900 text-gray-100">
         <Navbar />
         <div className="container mx-auto px-4 py-8">
           <Routes>
