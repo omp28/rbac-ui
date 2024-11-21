@@ -1,11 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 
 const UserManagement = () => {
-  const [users, setUsers] = useState([
-    { id: 1, name: "John Doe", role: "Admin", status: "Active" },
-    { id: 2, name: "Jane Smith", role: "Editor", status: "Inactive" },
-  ]);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const storedUsers = localStorage.getItem("users");
+    if (storedUsers) {
+      setUsers(JSON.parse(storedUsers));
+    } else {
+      const defaultUsers = [
+        { id: 1, name: "John Doe", role: "Admin", status: "Active" },
+        { id: 2, name: "Jane Smith", role: "Editor", status: "Inactive" },
+      ];
+      setUsers(defaultUsers);
+      localStorage.setItem("users", JSON.stringify(defaultUsers));
+    }
+  }, []);
+
+  const handleSave = (updatedUser) => {
+    const updatedUsers = users.map((user) =>
+      user.id === updatedUser.id ? updatedUser : user
+    );
+    setUsers(updatedUsers);
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+  };
 
   const [showModal, setShowModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
@@ -13,13 +32,6 @@ const UserManagement = () => {
   const handleEdit = (user) => {
     setCurrentUser(user);
     setShowModal(true);
-  };
-
-  const handleSave = (updatedUser) => {
-    setUsers((prev) =>
-      prev.map((user) => (user.id === updatedUser.id ? updatedUser : user))
-    );
-    setShowModal(false);
   };
 
   return (

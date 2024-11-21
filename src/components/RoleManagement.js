@@ -1,25 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 
 const RoleManagement = () => {
-  const [roles, setRoles] = useState([
-    { id: 1, name: "Admin", permissions: ["Read", "Write", "Delete"] },
-    { id: 2, name: "Editor", permissions: ["Read", "Write"] },
-  ]);
-
+  const [roles, setRoles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentRole, setCurrentRole] = useState(null);
+
+  useEffect(() => {
+    const storedRoles = localStorage.getItem("roles");
+    if (storedRoles) {
+      setRoles(JSON.parse(storedRoles));
+    } else {
+      const defaultRoles = [
+        { id: 1, name: "Admin", permissions: ["Read", "Write", "Delete"] },
+        { id: 2, name: "Editor", permissions: ["Read", "Write"] },
+      ];
+      setRoles(defaultRoles);
+      localStorage.setItem("roles", JSON.stringify(defaultRoles));
+    }
+  }, []);
+
+  const handleSave = (updatedRole) => {
+    const updatedRoles = roles.map((role) =>
+      role.id === updatedRole.id ? updatedRole : role
+    );
+    setRoles(updatedRoles);
+    localStorage.setItem("roles", JSON.stringify(updatedRoles));
+    setShowModal(false);
+  };
 
   const handleEdit = (role) => {
     setCurrentRole(role);
     setShowModal(true);
-  };
-
-  const handleSave = (updatedRole) => {
-    setRoles((prev) =>
-      prev.map((role) => (role.id === updatedRole.id ? updatedRole : role))
-    );
-    setShowModal(false);
   };
 
   return (
@@ -53,9 +65,9 @@ const RoleManagement = () => {
         </tbody>
       </table>
 
-      {showModal && (
+      {showModal && currentRole && (
         <Modal
-          role={currentRole}
+          user={currentRole}
           onSave={handleSave}
           onClose={() => setShowModal(false)}
         />
