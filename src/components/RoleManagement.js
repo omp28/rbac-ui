@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
+import { fetchRoles } from "../mock/api";
 
 const RoleManagement = () => {
   const [roles, setRoles] = useState([]);
@@ -11,12 +12,10 @@ const RoleManagement = () => {
     if (storedRoles) {
       setRoles(JSON.parse(storedRoles));
     } else {
-      const defaultRoles = [
-        { id: 1, name: "Admin", permissions: ["Read", "Write", "Delete"] },
-        { id: 2, name: "Editor", permissions: ["Read", "Write"] },
-      ];
-      setRoles(defaultRoles);
-      localStorage.setItem("roles", JSON.stringify(defaultRoles));
+      fetchRoles().then((roles) => {
+        setRoles(roles);
+        localStorage.setItem("roles", JSON.stringify(roles));
+      });
     }
   }, []);
 
@@ -35,35 +34,53 @@ const RoleManagement = () => {
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Role Management</h2>
-      <table className="min-w-full border">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border px-4 py-2">Role Name</th>
-            <th className="border px-4 py-2">Permissions</th>
-            <th className="border px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {roles.map((role) => (
-            <tr key={role.id}>
-              <td className="border px-4 py-2">{role.name}</td>
-              <td className="border px-4 py-2">
-                {role.permissions.join(", ")}
-              </td>
-              <td className="border px-4 py-2">
-                <button
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                  onClick={() => handleEdit(role)}
-                >
-                  Edit
-                </button>
-              </td>
+    <div className="space-y-6">
+      <h2 className="text-3xl font-bold text-gray-800 mb-6">Role Management</h2>
+      <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Role Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Permissions
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {roles.map((role) => (
+              <tr
+                key={role.id}
+                className="hover:bg-gray-50 transition-colors duration-200"
+              >
+                <td className="px-6 py-4 whitespace-nowrap">{role.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {role.permissions.map((perm, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-2"
+                    >
+                      {perm}
+                    </span>
+                  ))}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button
+                    className="text-indigo-600 hover:text-indigo-900 transition-colors duration-200"
+                    onClick={() => handleEdit(role)}
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {showModal && currentRole && (
         <Modal

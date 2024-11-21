@@ -10,14 +10,18 @@ import NotFound from "./pages/NotFound";
 const App = () => {
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/users" element={<UserManagement />} />
-        <Route path="/roles" element={<RoleManagement />} />
-        <Route path="/permissions" element={<PermissionsManagement />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <div className="min-h-screen bg-gray-100">
+        <Navbar />
+        <div className="container mx-auto px-4 py-8">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/users" element={<UserManagement />} />
+            <Route path="/roles" element={<RoleManagement />} />
+            <Route path="/permissions" element={<PermissionsManagement />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+      </div>
     </Router>
   );
 };

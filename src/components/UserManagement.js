@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
+import { fetchUsers } from "../mock/api";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const storedUsers = localStorage.getItem("users");
     if (storedUsers) {
       setUsers(JSON.parse(storedUsers));
     } else {
-      const defaultUsers = [
-        { id: 1, name: "John Doe", role: "Admin", status: "Active" },
-        { id: 2, name: "Jane Smith", role: "Editor", status: "Inactive" },
-      ];
-      setUsers(defaultUsers);
-      localStorage.setItem("users", JSON.stringify(defaultUsers));
+      fetchUsers().then((users) => {
+        setUsers(users);
+        localStorage.setItem("users", JSON.stringify(users));
+      });
     }
   }, []);
 
@@ -24,10 +25,8 @@ const UserManagement = () => {
     );
     setUsers(updatedUsers);
     localStorage.setItem("users", JSON.stringify(updatedUsers));
+    setShowModal(false);
   };
-
-  const [showModal, setShowModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
 
   const handleEdit = (user) => {
     setCurrentUser(user);
@@ -35,35 +34,58 @@ const UserManagement = () => {
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">User Management</h2>
-      <table className="min-w-full border">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border px-4 py-2">Name</th>
-            <th className="border px-4 py-2">Role</th>
-            <th className="border px-4 py-2">Status</th>
-            <th className="border px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td className="border px-4 py-2">{user.name}</td>
-              <td className="border px-4 py-2">{user.role}</td>
-              <td className="border px-4 py-2">{user.status}</td>
-              <td className="border px-4 py-2">
-                <button
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                  onClick={() => handleEdit(user)}
-                >
-                  Edit
-                </button>
-              </td>
+    <div className="space-y-6">
+      <h2 className="text-3xl font-bold text-gray-800 mb-6">User Management</h2>
+      <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Role
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {users.map((user) => (
+              <tr
+                key={user.id}
+                className="hover:bg-gray-50 transition-colors duration-200"
+              >
+                <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      user.status === "Active"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {user.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button
+                    className="text-indigo-600 hover:text-indigo-900 transition-colors duration-200"
+                    onClick={() => handleEdit(user)}
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {showModal && (
         <Modal
