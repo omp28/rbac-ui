@@ -12,6 +12,10 @@ Deployed at: [RBAC Task Website](https://rbac-task.omp28.me/)
 - Grant permissions to roles, controlling user actions.
 - Dynamic content rendering based on assigned roles and permissions.
 
+**Mobile Responsiveness**:
+
+- The website is fully responsive, providing an optimized experience on both mobile and desktop devices.
+
 ## Deployment
 
 The application has been deployed on a custom domain: [https://rbac-task.omp28.me/](https://rbac-task.omp28.me/).
@@ -22,8 +26,9 @@ The application has been deployed on a custom domain: [https://rbac-task.omp28.m
 
 1.  Clone the repository:
 
-    `git clone https://github.com/your-username/rbac-task  
-cd rbac-task`
+        `git clone https://github.com/your-username/rbac-task
+
+    cd rbac-task`
 
 2.  Install dependencies:
 

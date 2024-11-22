@@ -10,9 +10,9 @@ import NotFound from "./pages/NotFound";
 const App = () => {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-900 text-gray-100">
+      <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
         <Navbar />
-        <div className="container mx-auto px-4 py-8">
+        <div className="flex-grow container mx-auto px-4 py-8 overflow-x-auto">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/users" element={<UserManagement />} />

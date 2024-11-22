@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { fetchUsers, fetchRoles, fetchPermissions } from "../mock/api";
+import { motion } from "framer-motion";
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
@@ -36,12 +37,17 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       <h1 className="text-4xl font-bold mb-8 text-gray-100">RBAC Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <DashboardCard title="Users" count={users.length} />
         <DashboardCard title="Roles" count={roles.length} />
         <DashboardCard title="Permissions" count={permissions.length} />
       </div>
-      <div className="bg-gray-800 shadow-lg rounded-lg p-6 transition-all duration-300 hover:shadow-xl">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-gray-800 shadow-lg rounded-lg p-6 transition-all duration-300 hover:shadow-xl"
+      >
         <h2 className="text-2xl font-semibold mb-4 text-gray-200">
           Recent Activity
         </h2>
@@ -53,23 +59,29 @@ const Dashboard = () => {
             time="1 day ago"
           />
         </ul>
-      </div>
+      </motion.div>
     </div>
   );
 };
 
 const DashboardCard = ({ title, count }) => (
-  <div className="bg-gray-800 shadow-md rounded-lg p-6 transition-all duration-300 hover:shadow-xl border border-gray-700 hover:border-blue-500">
+  <motion.div
+    whileHover={{ scale: 1.05 }}
+    className="bg-gray-800 shadow-md rounded-lg p-6 transition-all duration-300 hover:shadow-xl border border-gray-700 hover:border-blue-500"
+  >
     <h2 className="text-xl font-semibold mb-2 text-gray-200">{title}</h2>
     <p className="text-3xl font-bold text-blue-400">{count}</p>
-  </div>
+  </motion.div>
 );
 
 const ActivityItem = ({ text, time }) => (
-  <li className="flex justify-between items-center bg-gray-700 p-3 rounded-md hover:bg-gray-600 transition-colors duration-200">
+  <motion.li
+    whileHover={{ x: 5 }}
+    className="flex justify-between items-center bg-gray-700 p-3 rounded-md hover:bg-gray-600 transition-colors duration-200"
+  >
     <span>{text}</span>
     <span className="text-sm text-gray-400">{time}</span>
-  </li>
+  </motion.li>
 );
 
 export default Dashboard;
