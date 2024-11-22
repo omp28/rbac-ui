@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
   const isActive = (path) => location.pathname === path;
 
@@ -14,6 +15,30 @@ const Navbar = () => {
     { path: "/roles", label: "Roles" },
     { path: "/permissions", label: "Permissions" },
   ];
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+  const menuVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
+  };
 
   return (
     <nav className="bg-gray-800 text-white px-6 py-4 sticky top-0 z-10">
@@ -38,7 +63,7 @@ const Navbar = () => {
               ) : (
                 <path
                   fillRule="evenodd"
-                  d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"
+                  d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2z"
                 />
               )}
             </svg>
@@ -60,28 +85,33 @@ const Navbar = () => {
         </ul>
       </div>
 
-      {isMenuOpen && (
-        <motion.ul
-          className="absolute top-0 left-0 w-full bg-gray-800 text-white flex flex-col items-start px-6 py-4 space-y-4 md:hidden"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {navItems.map(({ path, label }) => (
-            <motion.li key={path} whileHover={{ scale: 1.05 }}>
-              <Link
-                to={path}
-                className={`block hover:text-blue-400 transition-colors duration-200 ${
-                  isActive(path) ? "text-blue-400 font-semibold" : ""
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {label}
-              </Link>
-            </motion.li>
-          ))}
-        </motion.ul>
-      )}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.ul
+            ref={menuRef}
+            className="absolute top-0 left-0 w-full bg-gray-800 text-white flex flex-col items-start px-6 py-4 space-y-4 md:hidden"
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={menuVariants}
+            transition={{ duration: 0.3 }}
+          >
+            {navItems.map(({ path, label }) => (
+              <motion.li key={path} whileHover={{ scale: 1.05 }}>
+                <Link
+                  to={path}
+                  className={`block hover:text-blue-400 transition-colors duration-200 ${
+                    isActive(path) ? "text-blue-400 font-semibold" : ""
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {label}
+                </Link>
+              </motion.li>
+            ))}
+          </motion.ul>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
