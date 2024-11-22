@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const Modal = ({ user, onSave, onClose }) => {
+const Modal = ({ user, roles, onSave, onClose }) => {
   const [formData, setFormData] = useState({ ...user });
 
   const handleChange = (e) => {
@@ -28,12 +28,12 @@ const Modal = ({ user, onSave, onClose }) => {
           className="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md"
         >
           <h3 className="text-2xl font-bold mb-6 text-gray-100">
-            {formData.permissions ? "Edit Role" : "Edit User"}
+            {user.id ? "Edit User" : "Add User"}
           </h3>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
-                {formData.permissions ? "Role Name" : "Name"}
+                Name
               </label>
               <input
                 type="text"
@@ -43,27 +43,40 @@ const Modal = ({ user, onSave, onClose }) => {
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"
               />
             </div>
-            {formData.permissions && (
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Permissions
-                </label>
-                <input
-                  type="text"
-                  name="permissions"
-                  value={formData.permissions.join(", ")}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      permissions: e.target.value
-                        .split(",")
-                        .map((p) => p.trim()),
-                    })
-                  }
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"
-                />
-              </div>
-            )}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Role
+              </label>
+              <select
+                name="role"
+                value={formData.role || ""}
+                onChange={handleChange}
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"
+              >
+                <option value="" disabled>
+                  Select a role
+                </option>
+                {roles.map((role) => (
+                  <option key={role.id} value={role.name}>
+                    {role.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Status
+              </label>
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
           </div>
           <div className="flex justify-end space-x-4 mt-8">
             <motion.button
